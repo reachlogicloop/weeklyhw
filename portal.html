@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Loop | Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="portal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1 class="logo">Logic Loop</h1>
+        <button id="logout-btn" class="btn logout-btn">Log Out</button>
+    </nav>
+
+    <div class="portal-container">
+        
+        <header class="welcome-header">
+            <h2 id="welcome-message">Loading...</h2>
+            <p class="badge">Level: <span id="level-display">Loading...</span></p>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card ai-card">
+                <div class="card-icon">🤖</div>
+                <h3>Weekly AI Practice</h3>
+                <p>Your freshly generated AI problems for this week are ready! Test your skills.</p>
+                <button class="btn">Start Practice</button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💻</div>
+                <h3>Programming</h3>
+                <p>Jump back into your coding modules and build your next project.</p>
+                <button class="btn secondary-btn">Resume Course</button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🧩</div>
+                <h3>Critical Thinking</h3>
+                <p>Sharpen your mind with logic puzzles and strategy games.</p>
+                <button class="btn secondary-btn">View Puzzles</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="portal.js"></script>
+</body>
+</html>
