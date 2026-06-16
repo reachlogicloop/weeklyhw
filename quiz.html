@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Loop | Quiz Session</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="portal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .quiz-box { background-color: #1e293b; padding: 30px; border-radius: 12px; margin-bottom: 20px; text-align: left; }
+        .option-field { display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #334155; cursor: pointer; }
+        .option-field input { width: auto; cursor: pointer; }
+        .option-field:hover { border-color: #38bdf8; }
+        #loading-screen { text-align: center; font-size: 18px; color: #38bdf8; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="logo">Logic Loop</h1>
+        <button onclick="window.location.href='portal.html'" class="btn logout-btn" style="border-color:#38bdf8; color:#38bdf8;">Cancel and Exit</button>
+    </nav>
+    <div class="portal-container">
+        <header class="welcome-header">
+            <h2>Daily Knowledge Assessment</h2>
+            <p class="badge" id="quiz-day-badge">Calculating Day...</p>
+        </header>
+
+        <div id="loading-screen">🤖 Contacting Edge Engine to build out assignments tailored to your grade level...</div>
+        <form id="quiz-render-form" class="hidden">
+            <div id="questions-wrapper"></div>
+            <button type="submit" class="btn" style="width:100%; margin-top:20px;">Submit and Process Answers</button>
+        </form>
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html>
