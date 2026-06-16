@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Loop | Trainer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="portal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .gate-container { max-width: 400px; margin: 100px auto; text-align: center; background: #1e293b; padding: 40px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e293b; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background-color: #0ea5e9; color: white; }
+        .stat-banner { display: flex; gap: 20px; margin-bottom: 30px; }
+        .stat-box { background: #1e293b; padding: 20px; border-radius: 8px; flex: 1; text-align: center; border-left: 4px solid #38bdf8; }
+    </style>
+</head>
+<body>
+    <div id="trainer-gate" class="gate-container">
+        <h2>Trainer Security Lock</h2>
+        <p>Please enter administrative credential key to reveal class metrics.</p>
+        <input type="password" id="trainer-pass-input" placeholder="Admin Key Password">
+        <button class="btn" onclick="verifyTrainerGate()" style="width:100%; margin-top:15px;">Unlock Workspace</button>
+    </div>
+
+    <div id="trainer-workspace" class="portal-container hidden">
+        <header class="welcome-header">
+            <h2>Trainer Analytics Dashboard</h2>
+            <button onclick="window.location.href='portal.html'" class="btn" style="float:right; background:#475569; margin:0;">Student View</button>
+            <p class="badge">Scope: All Enrolled Students</p>
+        </header>
+
+        <div class="stat-banner">
+            <div class="stat-box"><h3 id="stat-total-students">0</h3><p>Registered Students</p></div>
+            <div class="stat-box"><h3 id="stat-total-quizzes">0</h3><p>Quizzes Completed</p></div>
+            <div class="stat-box"><h3 id="stat-avg-score">0%</h3><p>Class Accuracy Average</p></div>
+        </div>
+
+        <h3>Active Roster Progress Metrics</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email Address</th>
+                    <th>Grade Group</th>
+                    <th>Level</th>
+                    <th>Completed Quizzes</th>
+                    <th>Average Score</th>
+                </tr>
+            </thead>
+            <tbody id="roster-table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const supabase = window.supabase.createClient(
+            'https://oamzutzthpawylshdvqa.supabase.co', 
+            'sb_publishable_FB09becLi2b-q-KcwP6nKg_pvd8jaQn'
+        );
+
+        function verifyTrainerGate() {
+            const input = document.getElementById('trainer-pass-input').value;
+            if (input === "LogicTrainer2026") { 
+                document.getElementById('trainer-gate').classList.add('hidden');
+                document.getElementById('trainer-workspace').classList.remove('hidden');
+                loadTrainerMetrics();
+            } else {
+                alert("Invalid trainer login credential.");
+            }
+        }
+
+        async function loadTrainerMetrics() {
+            const { data: profiles } = await supabase.from('profiles').select('*');
+            const { data: attempts } = await supabase.from('quiz_attempts').select('*');
+
+            if (!profiles) return;
+
+            document.getElementById('stat-total-students').innerText = profiles.length;
+            document.getElementById('stat-total-quizzes').innerText = attempts ? attempts.length : 0;
+
+            let totalScores = 0;
+            if(attempts && attempts.length > 0) {
+                attempts.forEach(a => totalScores += (a.score / a.total_questions));
+                const averageCalculated = Math.round((totalScores / attempts.length) * 100);
+                document.getElementById('stat-avg-score').innerText = `${averageCalculated}%`;
+            }
+
+            const tbody = document.getElementById('roster-table-body');
+            tbody.innerHTML = "";
+
+            profiles.forEach(profile => {
+                const studentAttempts = attempts ? attempts.filter(a => a.student_id === profile.id) : [];
+                let studentAvg = "N/A";
+                
+                if (studentAttempts.length > 0) {
+                    let totalStudentScore = 0;
+                    studentAttempts.forEach(sa => totalStudentScore += sa.score);
+                    studentAvg = `${Math.round((totalStudentScore / (studentAttempts.length * 10)) * 100)}%`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${profile.full_name}</b></td>
+                    <td>${profile.email}</td>
+                    <td>${profile.grade}</td>
+                    <td style="text-transform: capitalize;">${profile.group_level}</td>
+                    <td>${studentAttempts.length} Completed</td>
+                    <td style="color:#38bdf8; font-weight:bold;">${studentAvg}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
