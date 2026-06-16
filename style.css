@@ -76,5 +76,32 @@ input:focus, select:focus {
     text-decoration: underline;
 }
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+/* Fallback elements for dynamically generated components */
+.quiz-box {
+    background-color: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.option-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0f172a;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    cursor: pointer;
+}
+.option-field input {
+    width: auto;
+    cursor: pointer;
+}
+.option-field:hover {
+    border-color: #38bdf8;
 }
